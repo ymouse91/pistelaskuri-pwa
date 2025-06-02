@@ -47,6 +47,22 @@
   </style>
 </head>
 <body>
+<footer style="
+  position: fixed;
+  bottom: 4px;
+  right: 6px;
+  font-size: 11px;
+  color: #000000; /* musta teksti */
+  //background-color: #ffa500; /* kirkas oranssi */
+  padding: 4px 8px;
+  z-index: 9999;
+  //border: 1px solid #888;
+  border-radius: 4px;
+  //box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+">
+  Versio 1.0.8
+</footer>
 
 <div id="step1">
   <h1>Pelin nimi</h1>
@@ -86,29 +102,32 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const gameNameInput = document.getElementById("game-name");
+  const btnGameName = document.getElementById("btn-game-name");
+  const step1 = document.getElementById("step1");
+  const step2 = document.getElementById("step2");
+  const playerInput = document.getElementById("player-name");
 
-  // Pakota kenttä näkyviin ja scrollaa iOS-ongelmien varalta
-  gameNameInput.addEventListener("touchend", () => {
-    setTimeout(() => {
-      gameNameInput.scrollIntoView({ behavior: "auto", block: "center" });
-      gameNameInput.focus();
-    }, 100);
-  });
+  // iOS yhteensopiva käyttäjän aktivoima focusointi
+  ["touchstart", "click"].forEach(evt =>
+    gameNameInput.addEventListener(evt, () => {
+      requestAnimationFrame(() => gameNameInput.focus());
+    })
+  );
 
-  document.getElementById("btn-game-name").addEventListener("click", () => {
+  btnGameName.addEventListener("click", () => {
     const name = gameNameInput.value.trim();
     if (name !== "") {
-      document.getElementById("step1").style.display = "none";
-      document.getElementById("step2").style.display = "block";
+      step1.style.display = "none";
+      step2.style.display = "block";
 
-      const playerInput = document.getElementById("player-name");
-      setTimeout(() => {
-        playerInput.scrollIntoView({ behavior: "auto", block: "center" });
+      requestAnimationFrame(() => {
         playerInput.focus();
-      }, 100);
+        playerInput.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
     }
   });
 });
 </script>
+
 </body>
 </html>
