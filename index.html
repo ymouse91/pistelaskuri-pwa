@@ -3,7 +3,13 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#ffffff">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  
   <title>Pistelaskuri</title>
   <style>
     body { font-family: sans-serif; margin: 0; padding: 1rem; background-color: #f4f4f4; }
@@ -42,7 +48,22 @@
   </style>
 </head>
 <body>
-
+<footer style="
+  position: fixed;
+  bottom: 4px;
+  right: 6px;
+  font-size: 11px;
+  color: #000000; /* musta teksti */
+  //background-color: #ffa500; /* kirkas oranssi */
+  padding: 4px 8px;
+  z-index: 9999;
+  //border: 1px solid #888;
+  border-radius: 4px;
+  //box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+">
+  Versio 1.0.2
+</footer>
 <div id="step1">
   <h1>Pelin nimi</h1>
   <input id="game-name" type="text" placeholder="Pelin nimi" />
