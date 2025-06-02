@@ -31,7 +31,7 @@
     .dialog {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 90%; max-width: 320px; background: white; padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1001;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000;
     }
     .keypad {
       display: grid; grid-template-columns: repeat(3, 1fr);
@@ -42,10 +42,6 @@
     #score-display {
       font-size: 2rem; text-align: center; border: 2px solid #ccc;
       border-radius: 6px; padding: 0.5rem; background: #fdfdfd; margin-bottom: 0.5rem;
-    }
-    #overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: rgba(0,0,0,0.4); display: none; z-index: 1000;
     }
   </style>
 </head>
@@ -72,8 +68,6 @@
   <div id="players" class="player-list"></div>
 </div>
 
-<div id="overlay"></div>
-
 <div id="score-dialog" class="dialog" style="display:none">
   <h3 id="score-player-name"></h3>
   <div id="score-display">0</div>
@@ -87,7 +81,6 @@
   <button onclick="location.reload()">Uusi peli</button>
   <button id="btn-cancel-end">Peru</button>
 </div>
-
 
 <script>
 let gameName = "";
@@ -124,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-end").addEventListener("click", endGame);
   document.getElementById("btn-new-round").addEventListener("click", newRound);
   document.getElementById("btn-cancel-end").addEventListener("click", () => {
-    document.getElementById("overlay").style.display = "none";
     document.getElementById("result-dialog").style.display = "none";
   });
 
@@ -168,7 +160,6 @@ function openScoreDialog(name) {
   currentScore = "";
   document.getElementById("score-player-name").textContent = name;
   document.getElementById("score-display").textContent = "0";
-  document.getElementById("overlay").style.display = "block";
   document.getElementById("score-dialog").style.display = "block";
 }
 
@@ -183,7 +174,7 @@ function handleKeypadPress(key) {
       scores[currentPlayer].rounds += 1;
       renderPlayers();
     }
-    closeDialogs();
+    document.getElementById("score-dialog").style.display = "none";
     return;
   } else {
     currentScore += key;
@@ -191,15 +182,9 @@ function handleKeypadPress(key) {
   document.getElementById("score-display").textContent = currentScore || "0";
 }
 
-function closeDialogs() {
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("score-dialog").style.display = "none";
-}
-
 function endGame() {
   const resultDialog = document.getElementById("result-dialog");
   const resultsList = document.getElementById("results");
-  document.getElementById("overlay").style.display = "block";
   resultDialog.style.display = "block";
   const sorted = [...players].sort((a, b) => scores[b].total - scores[a].total);
   resultsList.innerHTML = "";
@@ -216,11 +201,9 @@ function newRound() {
     scores[name].last = 0;
     scores[name].rounds = 0;
   });
-  document.getElementById("overlay").style.display = "none";
   document.getElementById("result-dialog").style.display = "none";
   renderPlayers();
 }
 </script>
-
 </body>
 </html>
