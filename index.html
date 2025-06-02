@@ -31,7 +31,7 @@
     .dialog {
       position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 90%; max-width: 320px; background: white; padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1001;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000;
     }
     .keypad {
       display: grid; grid-template-columns: repeat(3, 1fr);
@@ -43,14 +43,9 @@
       font-size: 2rem; text-align: center; border: 2px solid #ccc;
       border-radius: 6px; padding: 0.5rem; background: #fdfdfd; margin-bottom: 0.5rem;
     }
-    #overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: transparent; z-index: 1000; display: none;
-    }
   </style>
 </head>
 <body>
-<div id="overlay"></div>
 
 <div id="step1">
   <h1>Pelin nimi</h1>
@@ -94,14 +89,6 @@ let scores = {};
 let currentPlayer = "";
 let currentScore = "";
 let colors = ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f39c12", "#1abc9c", "#e67e22"];
-
-function showOverlay() {
-  document.getElementById("overlay").style.display = "block";
-}
-
-function hideOverlay() {
-  document.getElementById("overlay").style.display = "none";
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-game-name").addEventListener("click", () => {
@@ -174,7 +161,6 @@ function openScoreDialog(name) {
   document.getElementById("score-player-name").textContent = name;
   document.getElementById("score-display").textContent = "0";
   document.getElementById("score-dialog").style.display = "block";
-  showOverlay();
 }
 
 function handleKeypadPress(key) {
@@ -189,7 +175,6 @@ function handleKeypadPress(key) {
       renderPlayers();
     }
     document.getElementById("score-dialog").style.display = "none";
-    hideOverlay();
     return;
   } else {
     currentScore += key;
@@ -220,6 +205,5 @@ function newRound() {
   renderPlayers();
 }
 </script>
-
 </body>
 </html>
