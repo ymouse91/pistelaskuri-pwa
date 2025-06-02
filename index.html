@@ -47,10 +47,10 @@
   </style>
 </head>
 <body>
- 
+
 <div id="step1">
   <h1>Pelin nimi</h1>
-  <input id="game-name" type="text" placeholder="Pelin nimi" autofocus />
+  <input id="game-name" type="text" inputmode="text" autocomplete="off" placeholder="Pelin nimi" />
   <button id="btn-game-name">Jatka</button>
 </div>
 
@@ -84,7 +84,31 @@
 </div>
 
 <script>
-// JavaScript täydennetään tai säilytetään erikseen toiminnallisena osana
+document.addEventListener("DOMContentLoaded", () => {
+  const gameNameInput = document.getElementById("game-name");
+
+  // Pakota kenttä näkyviin ja scrollaa iOS-ongelmien varalta
+  gameNameInput.addEventListener("touchend", () => {
+    setTimeout(() => {
+      gameNameInput.scrollIntoView({ behavior: "auto", block: "center" });
+      gameNameInput.focus();
+    }, 100);
+  });
+
+  document.getElementById("btn-game-name").addEventListener("click", () => {
+    const name = gameNameInput.value.trim();
+    if (name !== "") {
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+
+      const playerInput = document.getElementById("player-name");
+      setTimeout(() => {
+        playerInput.scrollIntoView({ behavior: "auto", block: "center" });
+        playerInput.focus();
+      }, 100);
+    }
+  });
+});
 </script>
 </body>
 </html>
