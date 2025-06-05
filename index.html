@@ -176,7 +176,7 @@ function renderPlayers() {
         <div>${name} – ${scores[name].total} pistettä</div>
         <div class="last-round">Kierros ${scores[name].rounds}, edellinen: ${scores[name].last}</div>
       </div>
-      ${hasScore ? `<button onclick="correctScore('${name}')">Korjaa</button>` : ""}
+      ${hasScore ? `<button onclick="correctScore('${name}')">X</button>` : ""}
     `;
     player.querySelector(".player-info").addEventListener("click", () => openScoreDialog(name));
     playersDiv.appendChild(player);
