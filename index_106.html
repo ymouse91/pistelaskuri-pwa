@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fi">
 <head>
@@ -8,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Pistelaskuri</title>
   <style>
     body { font-family: sans-serif; margin: 0; padding: 1rem; background-color: #f4f4f4; }
@@ -34,6 +33,13 @@
       width: 90%; max-width: 320px; background: white; padding: 1rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000;
     }
+    .dialog:focus-within {
+      pointer-events: auto;
+    }
+    .overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.2); z-index: 999;
+    }
     .keypad {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem; margin-top: 1rem;
@@ -52,27 +58,28 @@
   bottom: 4px;
   right: 6px;
   font-size: 11px;
-  color: #000000; /* musta teksti */
-  //background-color: #ffa500; /* kirkas oranssi */
+  color: #000000;
   padding: 4px 8px;
   z-index: 9999;
-  //border: 1px solid #888;
   border-radius: 4px;
-  //box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
   font-family: sans-serif;
 ">
-  Versio 1.0.3
+  Versio 1.0.6
 </footer>
 <div id="step1">
   <h1>Pelin nimi</h1>
   <input id="game-name" type="text" placeholder="Pelin nimi" />
-  <button id="btn-game-name">Jatka</button>
+  <div>
+    <button id="btn-game-name">Jatka</button>
+  </div>
 </div>
 
 <div id="step2" style="display:none">
   <h1>Pelaajat</h1>
   <input id="player-name" type="text" placeholder="Pelaajan nimi" />
-  <button id="btn-add-player">Lisää pelaaja</button>
+  <div>
+    <button id="btn-add-player">Lisää pelaaja</button>
+  </div>
   <p>Jätä tyhjäksi ja paina 'Lisää pelaaja' aloittaaksesi pelin</p>
 </div>
 
@@ -83,6 +90,8 @@
   </div>
   <div id="players" class="player-list"></div>
 </div>
+
+<div id="overlay" class="overlay" style="display:none"></div>
 
 <div id="score-dialog" class="dialog" style="display:none">
   <h3 id="score-player-name"></h3>
@@ -160,16 +169,20 @@ function renderPlayers() {
   players.forEach((name, index) => {
     const player = document.createElement("div");
     player.className = "player";
+    const hasScore = scores[name].rounds > 0;
     player.innerHTML = `
       <div class="player-circle" style="background-color:${colors[index % colors.length]}">${name.charAt(0).toUpperCase()}</div>
       <div class="player-info" data-name="${name}">
         <div>${name} – ${scores[name].total} pistettä</div>
         <div class="last-round">Kierros ${scores[name].rounds}, edellinen: ${scores[name].last}</div>
-      </div>`;
+      </div>
+      ${hasScore ? `<button onclick="correctScore('${name}')">X</button>` : ""}
+    `;
     player.querySelector(".player-info").addEventListener("click", () => openScoreDialog(name));
     playersDiv.appendChild(player);
   });
 }
+
 
 function openScoreDialog(name) {
   currentPlayer = name;
@@ -220,6 +233,14 @@ function newRound() {
   document.getElementById("result-dialog").style.display = "none";
   renderPlayers();
 }
+  function correctScore(name) {
+  // Poista viimeksi annettu pistemäärä
+  scores[name].total -= scores[name].last;
+  scores[name].last = 0;
+  scores[name].rounds -= 1;
+  openScoreDialog(name);
+}
+
 </script>
 </body>
 </html>

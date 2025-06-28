@@ -7,12 +7,13 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Pistelaskuri</title>
   <style>
     body { font-family: sans-serif; margin: 0; padding: 1rem; background-color: #f4f4f4; }
     h1, h2 { text-align: center; }
-    input, button { font-size: 1.2rem; margin: 0.5rem; padding: 0.5rem; }
+    input, button, select { font-size: 1.2rem; margin: 0.5rem; padding: 0.5rem; }
+    datalist option { font-size: 1.2rem; }
     .player-list { margin-top: 2rem; }
     .player {
       background: white; border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem;
@@ -33,9 +34,7 @@
       width: 90%; max-width: 320px; background: white; padding: 1rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; z-index: 1000;
     }
-    .dialog:focus-within {
-      pointer-events: auto;
-    }
+    .dialog:focus-within { pointer-events: auto; }
     .overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background-color: rgba(0, 0, 0, 0.2); z-index: 999;
@@ -50,36 +49,27 @@
       font-size: 2rem; text-align: center; border: 2px solid #ccc;
       border-radius: 6px; padding: 0.5rem; background: #fdfdfd; margin-bottom: 0.5rem;
     }
+    .centered-input { text-align: center; display: flex; flex-direction: column; align-items: center; }
   </style>
 </head>
 <body>
-<footer style="
-  position: fixed;
-  bottom: 4px;
-  right: 6px;
-  font-size: 11px;
-  color: #000000;
-  padding: 4px 8px;
-  z-index: 9999;
-  border-radius: 4px;
-  font-family: sans-serif;
-">
-  Versio 1.0.6
+<footer style="position: fixed; bottom: 4px; right: 6px; font-size: 11px; color: #000000; padding: 4px 8px; z-index: 9999; border-radius: 4px; font-family: sans-serif;">
+  Versio 1.0.7
 </footer>
-<div id="step1">
+<div id="step1" class="centered-input">
   <h1>Pelin nimi</h1>
-  <input id="game-name" type="text" placeholder="Pelin nimi" />
-  <div>
-    <button id="btn-game-name">Jatka</button>
-  </div>
+  <input id="game-name" list="preset-games" placeholder="Pelin nimi" />
+  <datalist id="preset-games">
+    <option value="Tavukolmio">Tavukolmio</option>
+    <option value="PoKeNo">PoKeNo</option>
+  </datalist>
+  <button id="btn-game-name">Jatka</button>
 </div>
 
-<div id="step2" style="display:none">
+<div id="step2" style="display:none" class="centered-input">
   <h1>Pelaajat</h1>
   <input id="player-name" type="text" placeholder="Pelaajan nimi" />
-  <div>
-    <button id="btn-add-player">Lisää pelaaja</button>
-  </div>
+  <button id="btn-add-player">Lisää pelaaja</button>
   <p>Jätä tyhjäksi ja paina 'Lisää pelaaja' aloittaaksesi pelin</p>
 </div>
 
@@ -106,6 +96,7 @@
   <button onclick="location.reload()">Uusi peli</button>
   <button id="btn-cancel-end">Peru</button>
 </div>
+
 
 <script>
 let gameName = "";
