@@ -234,6 +234,14 @@ function newRound() {
   openScoreDialog(name);
 }
 
+// PWA: service worker iOS/Android/desktopille
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('./service-worker.js')
+      .catch(err => console.warn('Service workerin rekisteröinti epäonnistui:', err));
+  });
+}
 </script>
 </body>
 </html>
