@@ -7,9 +7,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
   <title>Pistelaskuri</title>
   <style>
+    html, body { touch-action: pan-x pan-y; }
     body { font-family: sans-serif; margin: 0; padding: 1rem; background-color: #f4f4f4; }
     h1, h2 { text-align: center; }
     input, button, select { font-size: 1.2rem; margin: 0.5rem; padding: 0.5rem; }
@@ -107,6 +108,29 @@ let scores = {};
 let currentPlayer = "";
 let currentScore = "";
 let colors = ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f39c12", "#1abc9c", "#e67e22"];
+let lastTouchEnd = 0;
+
+document.addEventListener("touchmove", (event) => {
+  if (event.touches.length > 1) {
+    event.preventDefault();
+  }
+}, { passive: false });
+
+document.addEventListener("touchend", (event) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, { passive: false });
+
+document.addEventListener("dblclick", (event) => {
+  event.preventDefault();
+}, { passive: false });
+
+document.addEventListener("gesturestart", (event) => {
+  event.preventDefault();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-game-name").addEventListener("click", () => {
