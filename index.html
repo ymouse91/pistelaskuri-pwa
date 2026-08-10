@@ -55,7 +55,7 @@
 </head>
 <body>
 <footer style="position: fixed; bottom: 4px; right: 6px; font-size: 11px; color: #000000; padding: 4px 8px; z-index: 9999; border-radius: 4px; font-family: sans-serif;">
-  Versio 1.0.9
+  Versio 1.0.10
 </footer>
 <div id="step1" class="centered-input">
   <h1>Pelin nimi</h1>
@@ -109,6 +109,7 @@ let currentPlayer = "";
 let currentScore = "";
 let colors = ["#e74c3c", "#3498db", "#2ecc71", "#9b59b6", "#f39c12", "#1abc9c", "#e67e22"];
 let lastTouchEnd = 0;
+let wakeLock = null;
 
 document.addEventListener("touchmove", (event) => {
   if (event.touches.length > 1) {
@@ -140,7 +141,34 @@ document.addEventListener("gestureend", (event) => {
   event.preventDefault();
 });
 
+async function requestWakeLock() {
+  if (!("wakeLock" in navigator) || wakeLock !== null || document.visibilityState !== "visible") {
+    return;
+  }
+
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => {
+      wakeLock = null;
+    });
+  } catch (err) {
+    console.warn("Näytön hereilläpito epäonnistui:", err);
+  }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    requestWakeLock();
+  }
+});
+
+["click", "touchend", "keydown"].forEach((eventName) => {
+  document.addEventListener(eventName, requestWakeLock, { passive: true });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
+  requestWakeLock();
+
   document.getElementById("btn-game-name").addEventListener("click", () => {
     const name = document.getElementById("game-name").value.trim();
     if (name !== "") {
