@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pistelaskuri-v1.0.11';
+const CACHE_NAME = 'pistelaskuri-v1.0.13';
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -9,7 +9,9 @@ const FILES_TO_CACHE = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache =>
+      cache.addAll(FILES_TO_CACHE.map(file => new Request(file, { cache: 'reload' })))
+    )
   );
   self.skipWaiting();
 });
@@ -34,7 +36,14 @@ self.addEventListener('fetch', (event) => {
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match('./index.html').then(response => response || fetch(event.request))
+      caches.open(CACHE_NAME).then(cache =>
+        fetch(event.request).then(response => {
+          if (response.ok) {
+            cache.put('./index.html', response.clone());
+          }
+          return response;
+        }).catch(() => caches.match('./index.html'))
+      )
     );
     return;
   }
